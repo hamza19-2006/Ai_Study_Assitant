@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. USER PROFILES
+    // Only the authenticated owner can read, create, or update their own profile
+    match /users/{userId} {
+      allow read, create, update: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 2. PRIVATE CHATS & MESSAGES
+    // Recursive wildcard protects all sessions and message subcollections
+    match /chats/{userId}/{documents=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 3. PUBLIC SHARED CHATS
+    match /sharedChats/{shareId} {
+      // Anyone (even not logged in) can view an active shared chat
+      allow get: if resource.data.isActive == true;
+
+      // Logged-in users can create a shared chat (ensures ownerId matches their auth UID)
+      allow create: if request.auth != null 
+                    && request.resource.data.ownerId == request.auth.uid;
+
+      // Only the original creator can update or delete the shared chat
+      allow update, delete: if request.auth != null 
+                            && resource.data.ownerId == request.auth.uid;
+    }
+
+  }
+}
