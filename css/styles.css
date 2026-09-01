@@ -2256,6 +2256,19 @@ body.light-theme .toast {
 
 
 /* --- Contact Manager Modal Content Styles --- */
+.contact-header h3 {
+    font-family: 'Audiowide', sans-serif;
+    color: var(--primary-accent);
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.25rem;
+}
+.contact-header p {
+    color: var(--text-color-light);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
 .contact-intro {
     font-size: 0.95rem;
     line-height: 1.6;
@@ -2269,28 +2282,34 @@ body.light-theme .toast {
     background: var(--background-primary);
     border-radius: 8px;
     padding: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     border: 1px solid var(--border-color);
 }
 .contact-note p {
     margin: 0 0 10px 0;
     font-size: 0.9rem;
     color: var(--text-color-light);
+    line-height: 1.5;
 }
 .contact-note p:last-child {
     margin-bottom: 0;
 }
-
-.contact-section {
-    margin-bottom: 20px;
-    text-align: center;
-}
-.contact-section h3 {
-    font-family: 'Audiowide', sans-serif;
-    font-size: 1.2rem;
+.inline-contact-link {
     color: var(--primary-accent);
-    margin-bottom: 15px;
-    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    word-break: break-all;
+    transition: opacity 0.2s, color 0.2s;
+}
+.inline-contact-link:hover {
+    opacity: 0.8;
+}
+
+.contact-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
 }
 
 .contact-btn {
@@ -2300,7 +2319,6 @@ body.light-theme .toast {
     gap: 10px;
     width: 100%;
     padding: 12px 20px;
-    margin-bottom: 10px;
     border: 1px solid var(--border-color);
     background: var(--input-bg);
     color: var(--text-color);
@@ -2313,9 +2331,6 @@ body.light-theme .toast {
     text-decoration: none;
     box-sizing: border-box; 
 }
-.contact-btn:last-child {
-    margin-bottom: 0;
-}
 .contact-btn svg {
     width: 22px;
     height: 22px;
@@ -2325,22 +2340,8 @@ body.light-theme .toast {
 
 /* General Hover */
 .contact-btn:hover {
-    transform: scale(1.03);
-    border-color: var(--primary-accent);
-    color: var(--primary-accent);
-    box-shadow: 0 0 10px var(--shadow-color);
-}
-
-/* Instagram Button Color */
-.instagram-btn {
-    color: #d62976;
-    border-color: rgba(214, 41, 118, 0.4);
-}
-.instagram-btn:hover {
-    border-color: #d62976;
-    color: #d62976;
-    background: rgba(214, 41, 118, 0.1);
-    box-shadow: 0 0 15px rgba(214, 41, 118, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* WhatsApp Button Color */
@@ -2353,4 +2354,28 @@ body.light-theme .toast {
     color: #25D366;
     background: rgba(37, 211, 102, 0.1);
     box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+}
+
+/* Email Button Color */
+.email-btn {
+    color: #ea4335;
+    border-color: rgba(234, 67, 53, 0.4);
+}
+.email-btn:hover {
+    border-color: #ea4335;
+    color: #ea4335;
+    background: rgba(234, 67, 53, 0.1);
+    box-shadow: 0 0 15px rgba(234, 67, 53, 0.4);
+}
+
+/* Portfolio Button Color */
+.portfolio-btn {
+    color: #00d2ff;
+    border-color: rgba(0, 210, 255, 0.4);
+}
+.portfolio-btn:hover {
+    border-color: #00d2ff;
+    color: #00d2ff;
+    background: rgba(0, 210, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
 }

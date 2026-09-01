@@ -78,14 +78,11 @@ let selectedFilesForUpload = [];
 let fetchController;
 let toastTimer;
 let currentSelectedRating = null;
+let currentSessionMessages = [];
 
 // Feedback state from localStorage
 let feedback = JSON.parse(localStorage.getItem("feedback") || "{}");
 
-// Webhook URL map
-const modeWebhooks = {
- 'base_url': 'https://n8n-cbpu.onrender.com/webhook/normal',
-};
 
 // --- Icon SVGs ---
 const iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
@@ -657,7 +654,7 @@ async function handleFeedbackSubmit(e) {
   submitFeedbackBtn.disabled = true;
   submitFeedbackBtn.textContent = 'Sending...';
   
-  const webhookURL = 'https://n8n-cbpu.onrender.com/webhook/feedback';
+  const feedbackEndpoint = '/api/feedback';
   const payload = {
     name: name,
     email: email,
@@ -666,7 +663,7 @@ async function handleFeedbackSubmit(e) {
   };
   
   try {
-    const response = await fetch(webhookURL, {
+    const response = await fetch(feedbackEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -675,7 +672,7 @@ async function handleFeedbackSubmit(e) {
     });
     
     if (!response.ok) {
-      throw new Error(`Webhook Error: ${response.statusText}`);
+      throw new Error(`Feedback API Error: ${response.statusText}`);
     }
     
     feedbackSuccess.textContent = '✅ Thank you! Your feedback has been sent.';
@@ -924,6 +921,7 @@ async function loadMessages(uid, sessionId) {
   const q = query(messagesRef, orderBy('timestamp'));
 
   unsubscribeMessages = onSnapshot(q, (snapshot) => {
+      currentSessionMessages = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
       const fragment = document.createDocumentFragment();
       snapshot.docs.forEach((docSnap, index) => {
           const msg = docSnap.data();
@@ -983,6 +981,7 @@ function generateSessionTitle(message) {
 
 function startNewChat() {
     currentSessionId = null;
+    currentSessionMessages = [];
     if(unsubscribeMessages) unsubscribeMessages();
     
     const elementsToRemove = [];
@@ -1075,10 +1074,7 @@ window.sendMessage = async function() {
 
   if (filesToUpload.length > 0) {
       const filePromises = filesToUpload.map(file => {
-          if (file.type.startsWith('image/')) {
-              return fileToDataUrl(file).then(dataURL => ({ name: file.name, type: file.type, size: file.size, dataURL }));
-          }
-          return { name: file.name, type: file.type, size: file.size };
+          return fileToDataUrl(file).then(dataURL => ({ name: file.name, type: file.type, size: file.size, dataURL }));
       });
       messageData.files = await Promise.all(filePromises);
   } 
@@ -1100,71 +1096,59 @@ window.sendMessage = async function() {
   sendBtn.style.display = 'none';
   stopGeneratingBtn.style.display = 'block';
 
+  // Build conversational memory buffer (last 15 messages)
+  const recentHistory = currentSessionMessages
+      .slice(-15)
+      .map(msg => ({
+          role: msg.sender === 'user' ? 'user' : 'model',
+          text: msg.text || ''
+      }))
+      .filter(m => m.text && m.text.trim());
 
- try {
-    const webhookUrl = 'https://n8n-cbpu.onrender.com/webhook/normal';
+  try {
+     const apiEndpoint = '/api/chat';
 
-    const formData = new FormData();
-    formData.append("text", messageText);
-    formData.append("userId", currentUserId);
-    formData.append("mode", currentSessionMode); 
+     let res = await fetch(apiEndpoint, { 
+         method: "POST", 
+         headers: {
+             "Content-Type": "application/json"
+         },
+         body: JSON.stringify({
+             text: messageText,
+             userId: currentUserId,
+             mode: currentSessionMode,
+             files: messageData.files || [],
+             history: recentHistory
+         }), 
+         signal: fetchController.signal 
+     });
 
-    filesToUpload.forEach((file, index) => {
-        formData.append(`file_${index}`, file, file.name); 
-    });
-    
-    let res = await fetch(webhookUrl, { 
-        method: "POST", 
-        body: formData, 
-        signal: fetchController.signal 
-    });
+     if (!res.ok) {
+         const errData = await res.json().catch(() => ({}));
+         throw new Error(errData.error || `Server returned error status: ${res.status}`);
+     }
+     
+     const data = await res.json();
+     let botMessageData = { sender: 'bot', timestamp: serverTimestamp() };
 
-    if (!res.ok) throw new Error(`Webhook failed with status: ${res.status}`);
-    
-    const contentType = res.headers.get("content-type");
-    let botMessageData = { sender: 'bot', timestamp: serverTimestamp() };
-
-    if (contentType && contentType.includes("application/json")) {
-        const data = await res.json();
-        let textResponse;
-        if (typeof data === 'object' && data !== null) {
-            textResponse = data.answer || data.cleanedText || JSON.stringify(data, null, 2);
-        } else {
-            textResponse = String(data);
-        }
-        botMessageData.text = textResponse || "Sorry, I couldn't get a text response from the API.";
-    } else if (contentType && (contentType.startsWith("text/"))) {
-         botMessageData.text = await res.text();
-    } else {
-        const blob = await res.blob();
-        const downloadURL = URL.createObjectURL(blob);
-        
-        const disposition = res.headers.get('content-disposition');
-        let filename = "response";
-        if (disposition && disposition.indexOf('attachment') !== -1) {
-            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-            const matches = filenameRegex.exec(disposition);
-            if (matches != null && matches[1]) { 
-                filename = matches[1].replace(/['"]/g, '');
-            }
-        } else {
-            filename += "." + (blob.type.split('/')[1] || 'bin');
-        }
-
-        if (blob.type.startsWith('image/')) {
-            botMessageData.file = { name: filename, type: blob.type, dataURL: downloadURL };
-        } else if (blob.type.startsWith('audio/')) {
-            botMessageData.audioURL = downloadURL;
-        } else {
-            botMessageData.file = { name: filename, type: blob.type, downloadURL: downloadURL, isDownloadable: true };
-        }
-    }
-    await addDoc(messagesRef, botMessageData);
+     if (data && data.answer) {
+         botMessageData.text = data.answer;
+     } else if (typeof data === 'string') {
+         botMessageData.text = data;
+     } else {
+         botMessageData.text = JSON.stringify(data, null, 2);
+     }
+     
+     await addDoc(messagesRef, botMessageData);
 
   } catch (err) { 
     if (err.name !== 'AbortError') {
-      console.error("Webhook error:", err);
-      await addDoc(messagesRef, { text: "Error: Could not connect to the AI assistant.", sender: 'bot', timestamp: serverTimestamp() });
+      console.error("AI chat error:", err);
+      await addDoc(messagesRef, { 
+          text: err.message ? `Error: ${err.message}` : "Error: Could not connect to the AI assistant.", 
+          sender: 'bot', 
+          timestamp: serverTimestamp() 
+      });
     }
   } finally {
     sendBtn.style.display = 'block';
