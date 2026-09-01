@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 
     // WAHA Configuration
     const wahaApiUrl = process.env.WAHA_API_URL || 'https://waha-whfe.onrender.com';
-    const wahaApiKey = process.env.WAHA_API_KEY || 'X7pQ9mK2vL5nR8tY3wZ1aB4cD6eF0gH';
+    const wahaApiKey = process.env.WAHA_API_KEY;
     const targetPhone = process.env.WAHA_TARGET_NUMBER || '923032172766';
     const chatId = targetPhone.includes('@c.us') ? targetPhone : `${targetPhone.replace(/^0/, '92')}@c.us`;
 
