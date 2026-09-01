@@ -198,7 +198,7 @@ export default async function handler(req, res) {
 
     for (let i = 0; i < apiKeys.length; i++) {
       const currentKey = apiKeys[i].trim();
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${currentKey}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${currentKey}`;
 
       try {
         console.log(`[AI Study Assistant] Trying Gemini API Key #${i + 1}...`);
