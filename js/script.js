@@ -572,12 +572,17 @@ changePasswordForm.addEventListener('submit', async (e) => {
     
   } catch (error) {
     console.error("Password update error:", error);
-    if (error.code === 'auth/wrong-password') {
-      changePassError.textContent = "Incorrect current password. Try again.";
+    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-password') {
+      changePassError.textContent = "Incorrect current password. Please try again.";
     } else if (error.code === 'auth/too-many-requests') {
-      changePassError.textContent = "Too many attempts. Please try again later.";
+      changePassError.textContent = "Too many failed attempts. Please try again later.";
+    } else if (error.code === 'auth/weak-password') {
+      changePassError.textContent = "New password must be at least 6 characters long.";
+    } else if (error.code === 'auth/requires-recent-login') {
+      changePassError.textContent = "Please log out and log in again before changing your password.";
     } else {
-      changePassError.textContent = "An error occurred. " + error.message.replace("Firebase: ", "");
+      const cleanMsg = (error.message || '').replace(/^Firebase:\s*/i, "").replace(/\s*\(auth\/[^)]+\)\.?/i, "").trim();
+      changePassError.textContent = cleanMsg || "Failed to update password. Please verify your current password.";
     }
   } finally {
     btn.disabled = false;
