@@ -658,19 +658,6 @@ async function handleFeedbackSubmit(e) {
   
   submitFeedbackBtn.disabled = true;
   submitFeedbackBtn.textContent = 'Sending...';
-  
-  const ratingEmoji = currentSelectedRating === '5' ? '⭐⭐⭐⭐⭐ (5/5)' :
-                      currentSelectedRating === '4' ? '⭐⭐⭐⭐ (4/5)' :
-                      currentSelectedRating === '3' ? '⭐⭐⭐ (3/5)' :
-                      currentSelectedRating === '2' ? '⭐⭐ (2/5)' :
-                      currentSelectedRating === '1' ? '⭐ (1/5)' : `${currentSelectedRating}`;
-
-  const waMessage = `🌟 *NEW AI STUDY ASSISTANT FEEDBACK* 🌟\n\n` +
-                    `👤 *Name:* ${name}\n` +
-                    `📧 *Email:* ${email}\n` +
-                    `📊 *Rating:* ${ratingEmoji}\n` +
-                    `💬 *Feedback:*\n"${feedbackVal}"\n\n` +
-                    `📅 *Time:* ${new Date().toLocaleString()}`;
 
   const payload = {
     name: name,
@@ -678,44 +665,21 @@ async function handleFeedbackSubmit(e) {
     feedback: feedbackVal,
     rating: currentSelectedRating
   };
-  
+
   try {
-    let sent = false;
+    const response = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-    // 1. Try serverless route /api/feedback (production on Vercel)
-    try {
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (response.ok) sent = true;
-    } catch (e) {
-      // Local static file or Live Server environment
-    }
-
-    // 2. Direct WAHA WhatsApp delivery (guarantees delivery in local & live testing!)
-    if (!sent) {
-      const waRes = await fetch('https://waha-whfe.onrender.com/api/sendText', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Api-Key': 'X7pQ9mK2vL5nR8tY3wZ1aB4cD6eF0gH'
-        },
-        body: JSON.stringify({
-          chatId: '923032172766@c.us',
-          text: waMessage,
-          session: 'default'
-        })
-      });
-
-      if (!waRes.ok) {
-        throw new Error(`WAHA API returned status: ${waRes.status}`);
-      }
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || `Server error: ${response.statusText}`);
     }
     
-    feedbackSuccess.textContent = '✅ Thank you! Your feedback has been sent successfully.';
-    showToast('✅ Feedback sent successfully ');
+    feedbackSuccess.textContent = '✅ Thank you! Your feedback has been sent.';
+    showToast('✅ Feedback sent successfully!');
     
     setTimeout(() => {
       closeFeedbackModal();
