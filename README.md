@@ -152,7 +152,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Author
 
-- **Developer**: M. Hamza (AI Solutions Developer & Systems Engineer)
+- **Developer**: Muhammad Hamza (AI Solutions Developer & Systems Engineer)
 - **Portfolio**: [hamza-systems.tech](https://hamza-systems.tech/)
 - **Contact**: [m.hamza.systems@gmail.com](mailto:m.hamza.systems@gmail.com)
 - **GitHub**: [@hamza19-2006](https://github.com/hamza19-2006)

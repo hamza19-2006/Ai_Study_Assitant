@@ -762,6 +762,109 @@ function updateFeedbackUI(likeBtn, dislikeBtn, state) {
   dislikeBtn.classList.toggle("active", state === "dislike");
 }
 
+// --- Markdown & Code Highlighting Parser ---
+function renderMarkdown(rawText) {
+  if (!rawText) return '';
+  let html = '';
+
+  if (window.marked) {
+    try {
+      window.marked.setOptions({
+        gfm: true,
+        breaks: true
+      });
+      html = window.marked.parse(rawText);
+    } catch (e) {
+      console.error("Markdown parse error:", e);
+      html = escapeHtml(rawText).replace(/\n/g, '<br>');
+    }
+  } else {
+    // Robust fallback regex parser
+    html = escapeHtml(rawText)
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\n/g, '<br>');
+  }
+
+  if (window.DOMPurify) {
+    html = window.DOMPurify.sanitize(html, {
+      ADD_ATTR: ['target', 'rel']
+    });
+  }
+
+  return html;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function enhanceMessageContent(container) {
+  // 1. Process Links: open in new tab securely
+  container.querySelectorAll('a').forEach(link => {
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+  });
+
+  // 2. Process Code Blocks: highlight & add copy button
+  container.querySelectorAll('pre').forEach(pre => {
+    const code = pre.querySelector('code');
+    if (window.hljs && code) {
+      try {
+        window.hljs.highlightElement(code);
+      } catch (e) {
+        console.warn("Highlight.js error:", e);
+      }
+    }
+
+    let lang = 'code';
+    if (code) {
+      const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'));
+      if (langClass) {
+        lang = langClass.replace('language-', '');
+      }
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+
+    const header = document.createElement('div');
+    header.className = 'code-block-header';
+
+    const langSpan = document.createElement('span');
+    langSpan.className = 'code-block-lang';
+    langSpan.textContent = lang;
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-code-btn';
+    copyBtn.innerHTML = `<svg width="14" height="14"><use href="#icon-copy"></use></svg><span>Copy</span>`;
+    copyBtn.onclick = (e) => {
+      e.stopPropagation();
+      const textToCopy = code ? code.innerText : pre.innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        copyBtn.innerHTML = `<span>Copied!</span>`;
+        setTimeout(() => {
+          copyBtn.innerHTML = `<svg width="14" height="14"><use href="#icon-copy"></use></svg><span>Copy</span>`;
+        }, 2000);
+      });
+    };
+
+    header.append(langSpan, copyBtn);
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.append(header, pre);
+  });
+}
+
 // --- Session and Chat Logic ---
 
 function filterSessions(searchTerm) {
@@ -1192,7 +1295,13 @@ function appendMessage(fragment, msg, isLastMessage) {
   }
   if (msg.text) {
       const textDiv = document.createElement('div');
-      textDiv.textContent = msg.text;
+      textDiv.className = 'message-content';
+      if (msg.sender === 'bot') {
+          textDiv.innerHTML = renderMarkdown(msg.text);
+          enhanceMessageContent(textDiv);
+      } else {
+          textDiv.textContent = msg.text;
+      }
       messageElement.appendChild(textDiv);
   }
   
