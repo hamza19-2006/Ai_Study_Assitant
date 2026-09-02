@@ -1,6 +1,4 @@
-// ===================================================
 // AI STUDY ASSISTANT - Main Application Script
-// ===================================================
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -85,16 +83,16 @@ let feedback = JSON.parse(localStorage.getItem("feedback") || "{}");
 
 
 // --- Icon SVGs ---
-const iconCopy = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
-const iconBin = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
-const iconMenu = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg>`;
-const iconSpeak = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-1.414 1.414A6.47 6.47 0 0 1 12.025 8a6.47 6.47 0 0 1-1.903 4.596zM10.12 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.903-4.596L8.708 4.83A4.48 4.48 0 0 1 10.025 8a4.48 4.48 0 0 1-1.317 3.17zM7.875 11.18a3 3 0 0 0 0-6.36L6.46 6.23A4.5 4.5 0 0 1 8.025 8a4.5 4.5 0 0 1-1.565 3.394zM6.025 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0"/></svg>`;
-const iconLike = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>`;
-const iconDislike = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>`;
-const iconEdit = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
-const iconShare = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>`;
+const iconCopy = `<svg width="16" height="16"><use href="#icon-copy"></use></svg>`;
+const iconBin = `<svg width="16" height="16"><use href="#icon-bin"></use></svg>`;
+const iconMenu = `<svg width="16" height="16"><use href="#icon-menu"></use></svg>`;
+const iconSpeak = `<svg width="16" height="16"><use href="#icon-speak"></use></svg>`;
+const iconLike = `<svg width="16" height="16"><use href="#icon-like"></use></svg>`;
+const iconDislike = `<svg width="16" height="16"><use href="#icon-dislike"></use></svg>`;
+const iconEdit = `<svg width="16" height="16"><use href="#icon-edit"></use></svg>`;
+const iconShare = `<svg width="16" height="16"><use href="#icon-share"></use></svg>`;
 
-// Eye icons
+// Eye icons (kept inline as they change state)
 const iconEyeOpen = `<svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/></svg>`;
 const iconEyeClosed = `<svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: none;"><path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.94 5.94 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.707z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.88 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.707z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/></svg>`;
 
@@ -220,7 +218,9 @@ async function updateUiForAuthState(user, username = null) {
     let displayName = username;
     if (!displayName) {
         try {
-          const userDocSnap = await getDoc(doc(db, 'users', user.uid));
+          const fetchProfile = getDoc(doc(db, 'users', user.uid));
+          const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000));
+          const userDocSnap = await Promise.race([fetchProfile, timeout]);
           if (userDocSnap.exists()) {
               displayName = userDocSnap.data().username;
           } else if (user.displayName) {
@@ -229,8 +229,8 @@ async function updateUiForAuthState(user, username = null) {
               displayName = user.email.split('@')[0];
           }
         } catch (error) {
-          console.error("Could not fetch user profile.", error);
-          displayName = user.email ? user.email.split('@')[0] : "there";
+          console.error("Could not fetch user profile or timed out.", error);
+          displayName = user.displayName || (user.email ? user.email.split('@')[0] : "there");
         }
     }
 
@@ -731,16 +731,7 @@ feedbackRatingGroup.addEventListener('click', (e) => {
 
 // --- Helpers ---
 function adjustChatContainerPadding() {
-  const header = document.querySelector('.site-header');
-  const chatContainer = document.querySelector('.chat-container');
-  if (window.innerWidth <= 768 && header && chatContainer) {
-      setTimeout(() => {
-          const headerHeight = header.offsetHeight;
-          chatContainer.style.paddingTop = `${headerHeight + 5}px`;
-      }, 100);
-  } else if (chatContainer) {
-      chatContainer.style.paddingTop = ''; 
-  }
+  // Logic removed in favor of CSS position: sticky
 }
 
 function formatDate(timestamp) {
@@ -932,14 +923,7 @@ async function loadMessages(uid, sessionId) {
           appendMessage(fragment, { id: docSnap.id, ...msg }, isLastMessage);
       });
 
-      const elementsToRemove = [];
-      for (let i = chatBoxInner.children.length - 1; i >= 0; i--) {
-          const child = chatBoxInner.children[i];
-          if (child.id !== 'typingIndicator' && child !== emptyChatState) {
-              elementsToRemove.push(child);
-          }
-      }
-      elementsToRemove.forEach(child => child.remove());
+    chatBoxInner.querySelectorAll('.message-wrapper').forEach(el => el.remove());
 
 
       if (snapshot.empty) {
@@ -959,27 +943,13 @@ async function loadMessages(uid, sessionId) {
 
 function generateSessionTitle(message) {
   if (!message) return "New Conversation";
-  let title = message.trim().replace(/^['"]|['"]$/g, '');
-  title = title.replace(/\s+/g, ' ');
+  let title = message.trim().replace(/^['"]|['"]$/g, '').replace(/\s+/g, ' ');
   
-  const words = title.split(' ');
-  let finalTitle = words.slice(0, 5).join(' ');
-
-  if (words.length > 5 || finalTitle.length >= 40) {
-      finalTitle = finalTitle.substring(0, 40);
-      if (words.length > 5 || finalTitle.length === 40) {
-          finalTitle += '...';
-      }
+  if (title.length > 40) {
+      title = title.substring(0, 40) + '...';
   }
   
-  if (finalTitle.length > 0) {
-      finalTitle = finalTitle.charAt(0).toUpperCase() + finalTitle.slice(1);
-  }
-
-  const genericPhrases = ["Hi", "Hello", "Hey", "I need help", "Can you explain"];
-  const isGeneric = genericPhrases.some(phrase => finalTitle.toLowerCase().startsWith(phrase.toLowerCase()));
-  
-  return isGeneric ? "New Conversation" : finalTitle;
+  return title.charAt(0).toUpperCase() + title.slice(1);
 }
 
 function startNewChat() {
@@ -987,14 +957,7 @@ function startNewChat() {
     currentSessionMessages = [];
     if(unsubscribeMessages) unsubscribeMessages();
     
-    const elementsToRemove = [];
-    for (let i = chatBoxInner.children.length - 1; i >= 0; i--) {
-        const child = chatBoxInner.children[i];
-        if (child.id !== 'typingIndicator' && child !== emptyChatState) {
-            elementsToRemove.push(child);
-        }
-    }
-    elementsToRemove.forEach(child => child.remove());
+    chatBoxInner.querySelectorAll('.message-wrapper').forEach(el => el.remove());
     
     emptyChatState.style.display = 'flex';
 
@@ -1363,12 +1326,22 @@ function appendMessage(fragment, msg, isLastMessage) {
 
 // --- Voice Input (Speech Recognition) Logic ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition;
+
 if (SpeechRecognition) {
-  const recognition = new SpeechRecognition();
-  recognition.continuous = false;
-  recognition.lang = 'en-US';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
+  try {
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+  } catch(e) {
+    console.warn("Speech recognition not supported in this browser environment.", e);
+    voiceBtn.style.display = 'none';
+  }
+}
+
+if (recognition) {
 
   recognition.onresult = (event) => {
     userInput.value = event.results[0][0].transcript;
@@ -1419,7 +1392,8 @@ function displayFilePreview(files) {
         
         if (file.type.startsWith('image/')) {
             const thumbnailImg = document.createElement('img');
-            fileToDataUrl(file).then(url => thumbnailImg.src = url);
+            thumbnailImg.src = URL.createObjectURL(file);
+            thumbnailImg.onload = () => URL.revokeObjectURL(thumbnailImg.src); // Free memory
             thumbnailDiv.appendChild(thumbnailImg);
         } else {
             thumbnailDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1.5A2.5 2.5 0 0 0 1.5 4v8A2.5 2.5 0 0 0 4 14.5h8a2.5 2.5 0 0 0 2.5-2.5V4A2.5 2.5 0 0 0 12 1.5H4zM4 3h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M6.5 7a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3z"/></svg>`;
@@ -1549,8 +1523,10 @@ function fileToDataUrl(file) {
       input.focus();
       input.select();
 
+      let isRenaming = false;
       const finishRename = async () => {
-          if (!infoDiv.contains(input)) return;
+          if (isRenaming || !infoDiv.contains(input)) return;
+          isRenaming = true;
 
           const newTitle = input.value.trim();
           

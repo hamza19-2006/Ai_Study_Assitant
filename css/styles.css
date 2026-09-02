@@ -24,6 +24,13 @@
   --danger-red: #ff4757;
   --success-green: #2ecc71;
   --icon-color: #888;
+  
+  /* Z-Index Hierarchy */
+  --z-tooltip: 10;
+  --z-header: 100;
+  --z-history-btn: 101;
+  --z-modal: 1000;
+  --z-mobile-backdrop: 1050;
 }
 
 body.light-theme {
@@ -44,11 +51,6 @@ body.light-theme {
   --danger-red: #dc3545;
   --success-green: #28a745;
   --icon-color: #555;
-}
-
-/* Global Transition Smoothing */
-* {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 
@@ -2079,12 +2081,12 @@ body.light-theme .toast {
 
     /* --- MOBILE UI FIXES --- */
     .site-header {
-        position: fixed;
+        position: sticky;
         top: 0; right: 0; left: 0;
         padding: 10px 5px;
         background: var(--background-secondary);
         border-bottom: 1px solid var(--border-color);
-        z-index: 100;
+        z-index: var(--z-header);
         flex-wrap: wrap;
         row-gap: 5px;
     }
