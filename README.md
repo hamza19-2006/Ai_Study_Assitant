@@ -1,6 +1,7 @@
 # AI Study Assistant
 
-#### Video Demo: [https://youtu.be/your-video-id](https://youtu.be/your-video-id)
+#### 🌐 Live Website: [https://aistudy.hamza-systems.tech/](https://aistudy.hamza-systems.tech/)
+#### 📹 Video Demo: [https://youtu.be/your-video-id](https://youtu.be/your-video-id)
 
 A modern, full-stack AI-powered study companion designed to empower students with personalized tutoring, active recall evaluation, and multimodal academic assistance. Built with modern web technologies, Firebase for authentication and real-time database management, and a secure serverless backend integrating the Google Gemini Multimodal AI engine.
 
@@ -150,8 +151,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## Author
+## Author & Links
 
+- **Live Application**: [aistudy.hamza-systems.tech](https://aistudy.hamza-systems.tech/)
 - **Developer**: Muhammad Hamza (AI Solutions Developer & Systems Engineer)
 - **Portfolio**: [hamza-systems.tech](https://hamza-systems.tech/)
 - **Contact**: [m.hamza.systems@gmail.com](mailto:m.hamza.systems@gmail.com)
